@@ -46,4 +46,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function travelRequests()
+    {
+        return $this->hasMany(TravelRequest::class, 'user_id');
+    }
 }

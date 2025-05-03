@@ -16,7 +16,6 @@ class AuthController extends Controller
             'password' => 'required|min:6|confirmed'
         ]);
 
-        
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -26,6 +25,11 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
+            'user' => [
+                "id" => $user->id,
+                "name" => $user->name,
+                "email" => $user->email
+            ],
             'access_token' => $token,
             'token_type' => 'Bearer'
         ], 201);
@@ -58,6 +62,10 @@ class AuthController extends Controller
     public function logout(Request $request){
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Logout realizado com sucesso!']);
+    }
+
+    public function getUser(Request $request){
+        return $request->user();
     }
 
 }

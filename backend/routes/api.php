@@ -15,4 +15,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/travel-requests/{id}', [TravelRequestController::class, 'show']);
     Route::patch('/travel-requests/{id}/status', [TravelRequestController::class, 'updateStatus']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/user', [AuthController::class, 'getUser']);
 });
