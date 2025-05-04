@@ -51,4 +51,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(TravelRequest::class, 'user_id');
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->is_admin;
+    }
 }

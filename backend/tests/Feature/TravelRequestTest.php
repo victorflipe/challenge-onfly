@@ -19,7 +19,7 @@ class TravelRequestTest extends TestCase
         $user = User::factory()->create();
         $this->actingAs($user, 'sanctum');
 
-
+        // dd($user);
         $payload = [
             'requester_name' => $user->name,
             'destination' => 'Belo Horizonte',
