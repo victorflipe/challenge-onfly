@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import FormTravelRequest from '@/components/FormTravelRequest.vue'
-
-const form = reactive({
-  requesterName: '',
-  destination: ''
-})
+import { useAuthStore } from '@/store/auth';
 
 </script>
 
@@ -19,7 +15,7 @@ const form = reactive({
   </VRow>
   <VRow>
     <VCol class="12">
-      <FormTravelRequest v-model:requesterName="form.requesterName" v-model:destination="form.destination" />
+      <FormTravelRequest/>
     </VCol>
   </VRow>
 

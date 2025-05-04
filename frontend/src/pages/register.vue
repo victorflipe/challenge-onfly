@@ -8,6 +8,7 @@ import authV1MaskLight from '@images/pages/auth-v1-mask-light.png'
 import authV1Tree2 from '@images/pages/auth-v1-tree-2.png'
 import authV1Tree from '@images/pages/auth-v1-tree.png'
 import { registerUser } from '@/services/userService'
+import { useAuthStore } from '@/store/auth'
 
 const form = ref({
   username: '',
@@ -18,6 +19,8 @@ const form = ref({
 
 const formRef = ref<VForm | null>(null)
 
+const authStore = useAuthStore()
+const router = useRouter()
 const showError = ref(false)
 const errorMessage = ref('')
 
@@ -60,7 +63,6 @@ const confirmPasswordRules = [
 ]
 
 const onSubmit = async () => {
-  console.log('Enter here...')
   showError.value = false
   errorMessage.value = ''
 
@@ -79,6 +81,7 @@ const onSubmit = async () => {
   }
 
   try{
+
     const payload = {
       name: form.value.username,
       email: form.value.email,
@@ -86,9 +89,9 @@ const onSubmit = async () => {
       password_confirmation: form.value.confirmPassword
     }
 
-    const result = await registerUser(payload)
+    await authStore.register(payload)
 
-    // console.log('Usuário cadastrado: ', result)
+    router.push({name:'dashboard'})
 
   }catch(error: any){
     errorMessage.value = error.response?.data?.message || 'Erro ao cadastrar usuário'

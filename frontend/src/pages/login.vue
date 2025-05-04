@@ -61,8 +61,6 @@ const onSubmit = async () => {
       email: form.value.email,
       password: form.value.password,
     })
-
-    await authStore.loadToken()
     
     router.push({ name: 'dashboard' })
   } catch (error: any) {

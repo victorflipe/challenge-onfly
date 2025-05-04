@@ -5,6 +5,14 @@ interface User {
   id: number
   name: string
   email: string
+  is_admin: boolean
+}
+
+interface UserRegister{
+  name: string,
+  email: string,
+  password: string,
+  password_confirmation: string
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -14,15 +22,27 @@ export const useAuthStore = defineStore('auth', {
    }),
   
   actions: {
-    // Método de login
     async login(payload: { email: string; password: string }) {
       try {
-        // await axiosInstance.get('/sanctum/csrf-cookie')
-        console.log(payload);
         const response = await axiosInstance.post('/login', payload)
         const token = response.data.access_token
 
         this.setToken(token)
+        this.loadToken()
+        await this.fetchUser()
+      } catch (error) {
+        this.logout()
+        throw error
+      }
+    },
+
+    async register(payload: UserRegister){
+      try {
+        const response = await axiosInstance.post('/register', payload)
+        const token = response.data.access_token
+
+        this.setToken(token)
+        this.loadToken()
         await this.fetchUser()
       } catch (error) {
         this.logout()
@@ -34,6 +54,7 @@ export const useAuthStore = defineStore('auth', {
      async fetchUser() {
        try {
          const response = await axiosInstance.get('/user')
+         console.log(response)
          this.user = response.data
        } catch (error) {
          console.error('Erro ao buscar usuário:', error)

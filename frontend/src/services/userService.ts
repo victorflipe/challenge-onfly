@@ -12,7 +12,6 @@ interface LoginPayload{
 }
 
 export const registerUser = async(payload: RegisterPayload) => {
-    //console.log('API URL:', import.meta.env.VITE_API_BASE_URL)
     const response = await axiosInstance.post('/register', payload)
     return response.data
 }
