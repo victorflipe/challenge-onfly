@@ -123,13 +123,7 @@ const onSubmit = async () => {
 
         const currentItem = props.item
         const isUpdating = currentItem && ["approved", "canceled"].includes(payload.status)
-        // console.log("Update: ", props.item?.id && ["requested"].includes(payload.status))
-        // console.log(payload.status)
-        // return
-        // console.log("Id: ", currentItem.id)
-        // console.log("Admin: ", !authUser.user?.is_admin)
-
-        // return;
+     
         if (isUpdating) {
             await updateStatus(currentItem.id, payload.status)
             showSuccess("Register updated successfully")
@@ -208,7 +202,7 @@ onMounted(() => {
                     
                             <VCol cols="6">
                                 <VTextField v-model="form.destination" label="Destination"
-                                    placeholder="123 Main St, New York, NY 10001" :rules="destinationRules" :disabled="disabledFields" />
+                                    placeholder="São Paulo" :rules="destinationRules" :disabled="disabledFields" />
                             </VCol>
 
                             <VCol cols="6">
