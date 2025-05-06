@@ -84,7 +84,7 @@ Para os demais usuários, a senha ``password`` é a padrão
 ## 🧪 Rodando os testes
 
 Para executar os testes, também utilizaremos o  comando ``make``
-Execute o seguinte:
+Na raíz da aplicação, execute o seguinte:
 
 ```
 make test
@@ -100,4 +100,35 @@ Para simular o envio das Notifications, utilizou-se o Mailpit que pode ser acess
  http://localhost:8025/ 
  ```
 
+## 📡 Endpoints da API
+
+Para acessar os endpoints, entre no seguinte endereço:
+
+```
+http://localhost:8000/api
+```
+
+### 🔐 Autenticação
+
+| Método | Rota        | Descrição                         | Autenticado |
+|--------|-------------|-----------------------------------|-------------|
+| POST   | `/register` | Registra um novo usuário          | ❌          |
+| POST   | `/login`    | Realiza login e retorna o token   | ❌          |
+| POST   | `/logout`   | Encerra a sessão do usuário       | ✅          |
+| GET    | `/user`     | Retorna os dados do usuário logado| ✅          |
+
+---
+
+### 🧳 Travel Requests
+
+| Método | Rota                                     | Descrição                                             | Autenticado |
+|--------|------------------------------------------|-------------------------------------------------------|-------------|
+| GET    | `/travel-requests`                       | Lista todos os pedidos de viagem                     | ✅          |
+| POST   | `/travel-requests`                       | Cria um novo pedido de viagem                        | ✅          |
+| GET    | `/travel-requests/{id}`                  | Retorna os detalhes de um pedido de viagem específico| ✅          |
+| PUT    | `/travel-requests/{id}`                  | Atualiza um pedido de viagem                         | ✅          |
+| PATCH  | `/travel-requests/{id}/status`           | Atualiza o status de um pedido de viagem             | ✅          |
+| GET    | `/check-update-status/{id}`              | Verifica se o status do pedido pode ser atualizado   | ✅          |
+
+ 
  Espero que funcione na sua máquina :)
