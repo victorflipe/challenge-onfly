@@ -61,4 +61,13 @@ export default defineConfig({
       './src/**/*.vue',
     ],
   },
+  // server: {
+  //   proxy: {
+  //     '/api': {
+  //       target: 'http://localhost:8000',  // URL do backend Laravel
+  //       changeOrigin: true,
+  //       rewrite: (path) => path.replace(/^\/api/, ''), // Ajuste o caminho se necessário
+  //     },
+  //   },
+  // },
 })
