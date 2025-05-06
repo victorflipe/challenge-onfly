@@ -108,6 +108,7 @@ const onSubmit = async () => {
         color.value = "error"
         showError.value = true
         errorMessage.value = "Fix form errors"
+        isLoading.value = false
         return
     }
 
@@ -122,12 +123,18 @@ const onSubmit = async () => {
 
         const currentItem = props.item
         const isUpdating = currentItem && ["approved", "canceled"].includes(payload.status)
+        // console.log("Update: ", props.item?.id && ["requested"].includes(payload.status))
+        // console.log(payload.status)
+        // return
+        // console.log("Id: ", currentItem.id)
+        // console.log("Admin: ", !authUser.user?.is_admin)
 
+        // return;
         if (isUpdating) {
             await updateStatus(currentItem.id, payload.status)
             showSuccess("Register updated successfully")
         } else {
-            if( !authUser.user?.is_admin && props.item?.id && !["approved", "canceled"].includes(payload.status)){
+            if(props.item?.id && ["requested"].includes(payload.status)){
                 await updateRequest(props.item?.id, payload)
                 showSuccess("Register updated successfully")
             }else{
