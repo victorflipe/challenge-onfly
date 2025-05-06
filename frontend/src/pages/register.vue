@@ -59,7 +59,7 @@ const passwordRules = [
 
 const confirmPasswordRules = [
   (v: string) => !!v || 'Confirmation is required',
-  (v: string) => v === form.value.password || 'Passwords must match',
+  (v: string) => v === form.value.password || 'Password must match',
 ]
 
 const onSubmit = async () => {
@@ -69,16 +69,16 @@ const onSubmit = async () => {
   const { valid } = await formRef.value!.validate()
 
   if (!valid) {
-    errorMessage.value = 'Corrija os erros do formulário'
+    errorMessage.value = 'Verify form errors'
     showError.value = true
     return
   }
 
-  if (form.value.password !== form.value.confirmPassword) {
-    errorMessage.value = 'As senhas não conferem.'
-    showError.value = true
-    return
-  }
+  // if (form.value.password !== form.value.confirmPassword) {
+  //   errorMessage.value = 'As senhas não conferem.'
+  //   showError.value = true
+  //   return
+  // }
 
   try{
 
@@ -94,7 +94,7 @@ const onSubmit = async () => {
     router.push({name:'dashboard'})
 
   }catch(error: any){
-    errorMessage.value = error.response?.data?.message || 'Erro ao cadastrar usuário'
+    errorMessage.value = 'Error registering user'
     showError.value = true
   }
 
@@ -105,8 +105,14 @@ const onSubmit = async () => {
 <template>
   <!-- eslint-disable vue/no-v-html -->
 
-  <VAlert v-if="showError" density="compact" class="mx-2 mt-2 position-absolute" block max-width="400" title="Campos inválidos" color="warning" type="warning" border="start"
-    :text="errorMessage" closable></VAlert>
+  <VSnackbar v-model="showError" location="top" :color="color" variant="elevated" :timeout="timeout">
+        {{ errorMessage }}
+        <template v-slot:actions>
+            <v-btn color="blue" variant="text" @click="showError = false">
+                Close
+            </v-btn>
+        </template>
+    </VSnackbar>
 
   <div class="auth-wrapper d-flex align-center justify-center pa-4">
     <VCard class="auth-card pa-4 pt-7" max-width="448">
@@ -115,18 +121,15 @@ const onSubmit = async () => {
         <RouterLink to="/" class="d-flex align-center gap-3">
           <!-- eslint-disable vue/no-v-html -->
           <div class="d-flex" v-html="logo" />
-          <h2 class="font-weight-medium text-2xl text-uppercase">
-            Materio
-          </h2>
         </RouterLink>
       </VCardItem>
 
-      <VCardText class="pt-2">
+      <VCardText class="pt-2 text-center">
         <h4 class="text-h4 mb-1">
-          Adventure starts here 🚀
+          Register Now 🚀
         </h4>
         <p class="mb-0">
-          Make your app management easy and fun!
+          Register and schedule your travel
         </p>
       </VCardText>
 

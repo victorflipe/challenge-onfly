@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { registerRequest, updateStatus } from '@/services/travelRequestsService'
+import { registerRequest, updateRequest, updateStatus } from '@/services/travelRequestsService'
 import { useAuthStore } from '@/store/auth'
 import { formatDate, onlyDate } from '@/utils/dateFormatter'
 import avatar1 from '@images/avatars/avatar-1.png'
@@ -38,14 +38,16 @@ const errorMessage = ref('')
 const router = useRouter()
 const color = ref('success')
 const timeout = ref(2000)
+const isLoading = ref(false)
+const disabledFields = ref(false)
 
 const returnDateRules = [
-    (v: Date | null) => !!v || 'Data de retorno é obrigatória',
+    (v: Date | null) => !!v || 'Return date is required',
     (v: Date | null) => {
         const returnDate = onlyDate(new Date(v))
         const departureDate = onlyDate(form.value.departure_date)
         return !v || returnDate >= departureDate ||
-            'Data de retorno deve ser igual ou posterior à data de partida'
+            'The return date must be the same or later than the departure date'
 
     }
 ]
@@ -98,6 +100,7 @@ function showErrorMessage(message: string) {
 const onSubmit = async () => {
 
     errorMessage.value = ''
+    isLoading.value = true
 
     const { valid } = await formRef.value!.validate()
 
@@ -124,18 +127,20 @@ const onSubmit = async () => {
             await updateStatus(currentItem.id, payload.status)
             showSuccess("Register updated successfully")
         } else {
-            await registerRequest(payload)
-            showSuccess("Register saved successfully")
+            if( !authUser.user?.is_admin && props.item?.id && !["approved", "canceled"].includes(payload.status)){
+                await updateRequest(props.item?.id, payload)
+                showSuccess("Register updated successfully")
+            }else{
+                await registerRequest(payload)
+                showSuccess("Register saved successfully")
+            }
+
         }
-        // console.log('Timeout: ', timeout.value)
 
         setTimeout(() => {
             showError.value = false
-            // console.log(showError.value)
             router.push({ name: 'dashboard' })
         }, timeout.value)
-
-        // console.log(showError.value)
 
     } catch (error: any) {
         if (props.item) {
@@ -143,24 +148,32 @@ const onSubmit = async () => {
         } else {
             showErrorMessage("Fix form errors")
         }
+    }finally{
+        isLoading.value = false
     }
 }
 
 onMounted(() => {
     if (props.item) {
-        // console.log('Props: ', props.item)
         form.value.requester_name = props.item.requester_name
         form.value.destination = props.item.destination
         form.value.departure_date = new Date(formatDate(props.item.departure_date))
         form.value.return_date = new Date(formatDate(props.item.return_date))
         form.value.status = props.item.status
-        // console.log('form: ', form.value)
+
+        disabledFields.value = !authUser.user?.is_admin && ["approved", "canceled"].includes(props.item.status)
     }
 })
 
 </script>
 
 <template>
+
+    <div v-if="isLoading" class="loading-overlay">
+        <VProgressCircular indeterminate
+        color="blue"
+        class="ma-4"/>
+    </div>
 
     <VSnackbar v-model="showError" location="top" :color="color" variant="elevated" :timeout="timeout">
         {{ errorMessage }}
@@ -176,39 +189,38 @@ onMounted(() => {
             <VCard>
 
                 <VCardText>
-                    <!-- 👉 Form -->
+                    <h4 class="text-center" v-if="disabledFields">Request Closed</h4>
                     <VForm ref="formRef" @submit.prevent="onSubmit" class="mt-6" validate-on="submit">
                         <VRow>
-                            <!-- 👉 First Name -->
+                    
                             <VCol cols="12">
                                 <VTextField v-model="form.requester_name" disabled placeholder="John"
                                     label="Requester Name" />
                             </VCol>
 
-                            <!-- 👉 Address -->
+                    
                             <VCol cols="6">
                                 <VTextField v-model="form.destination" label="Destination"
-                                    placeholder="123 Main St, New York, NY 10001" :rules="destinationRules" />
+                                    placeholder="123 Main St, New York, NY 10001" :rules="destinationRules" :disabled="disabledFields" />
                             </VCol>
 
                             <VCol cols="6">
                                 <VCombobox label="Status" :items="itemsStatus" v-model="form.status" variant="outlined"
-                                    :disabled="!props.item" />
+                                    :disabled="!props.item || disabledFields" />
                             </VCol>
 
                             <VCol cols="6">
                                 <VDateInput v-model="form.departure_date" label="Departure Date" :min="minDate"
-                                    variant="outlined" locale="en-US" />
+                                    variant="outlined" locale="en-US"  :disabled="disabledFields" />
                             </VCol>
 
                             <VCol cols="6">
                                 <VDateInput v-model="form.return_date" label="Return Date" :min="minDate"
-                                    :rules="returnDateRules" variant="outlined" locale="en-US" />
-                                <!-- prepend-icon="mdi-calendar" -->
+                                    :rules="returnDateRules" variant="outlined" locale="en-US"  :disabled="disabledFields"/>
                             </VCol>
 
                             <VCol cols="12" class="d-flex flex-wrap gap-4">
-                                <VBtn type="submit">
+                                <VBtn type="submit" :disabled="disabledFields">
                                     Submit
                                 </VBtn>
 
@@ -216,7 +228,7 @@ onMounted(() => {
                                     Cancelar
                                 </VBtn> -->
 
-                                <VBtn color="secondary" variant="outlined" type="reset" @click.prevent="resetForm">
+                                <VBtn color="secondary" variant="outlined" type="reset" @click.prevent="resetForm"  :disabled="disabledFields">
                                     Reset
                                 </VBtn>
                             </VCol>
@@ -228,3 +240,18 @@ onMounted(() => {
 
     </VRow>
 </template>
+
+<style scoped>
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color: rgba(255, 255, 255, 0.6); /* semi-transparente */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>

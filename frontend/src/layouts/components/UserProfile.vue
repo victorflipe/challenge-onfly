@@ -6,11 +6,21 @@ import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
 const router = useRouter()
+const user = ref({})
 
 const onLogout = async() => {
   authStore.logout()
   router.push({name: 'login'})
 }
+
+watch(() => authStore.user, (newUser) => {
+  if (newUser) {
+    user.value = {
+      name: newUser.name,
+      role: newUser.is_admin ? 'Admin' : 'User'
+    }
+  }
+}, { immediate: true })
 
 </script>
 
@@ -62,40 +72,12 @@ const onLogout = async() => {
             <VListItemTitle class="font-weight-semibold">
               {{ authStore.user?.name }}
             </VListItemTitle>
-            <VListItemSubtitle v-if="authStore.user?.is_admin">Admin</VListItemSubtitle>
+            <!-- <VListItemSubtitle v-if="authStore.user?.is_admin">Admin</VListItemSubtitle> -->
+            <VListItemSubtitle>{{ user.role }}</VListItemSubtitle>
           </VListItem>
+        
           <VDivider class="my-2" />
 
-          <!-- 👉 Profile -->
-          <VListItem link>
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="ri-user-line"
-                size="22"
-              />
-            </template>
-
-            <VListItemTitle>Profile</VListItemTitle>
-          </VListItem>
-
-          <!-- 👉 Settings -->
-          <VListItem link>
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="ri-settings-4-line"
-                size="22"
-              />
-            </template>
-
-            <VListItemTitle>Settings</VListItemTitle>
-          </VListItem>
-
-          <!-- Divider -->
-          <VDivider class="my-2" />
-
-          <!-- 👉 Logout -->
           <VListItem link>
             <template #prepend>
               <VIcon

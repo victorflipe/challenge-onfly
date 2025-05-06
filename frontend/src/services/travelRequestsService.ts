@@ -10,13 +10,16 @@ interface RequestPayload{
 
 export const registerRequest = async(payload: RequestPayload) => {
     const response = await axiosInstance.post('/travel-requests', payload)
-    console.log(response)
+    return response.data
+}
+
+export const updateRequest = async(id, payload: RequestPayload) => {
+    const response = await axiosInstance.put(`/travel-requests/${id}`, payload)
     return response.data
 }
 
 export const getRequests = async(page = 1) => {
     const response = await axiosInstance.get(`/travel-requests?page=${page}`)
-    // console.log(response.data)
     return response.data
 }
 

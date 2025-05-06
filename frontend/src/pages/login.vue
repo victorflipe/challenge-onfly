@@ -12,6 +12,7 @@ import authV1Tree2 from '@images/pages/auth-v1-tree-2.png'
 import authV1Tree from '@images/pages/auth-v1-tree.png'
 import { VForm } from 'vuetify/components'
 import axiosInstance from '@/plugins/axios'
+import { colorKeywords } from '@iconify/utils'
 
 const form = ref({
   email: '',
@@ -23,6 +24,9 @@ const formRef = ref<VForm | null>(null)
 const showError = ref(false)
 const errorMessage = ref('')
 const isPasswordVisible = ref(false)
+const isLoading = ref(false)
+const timeout = ref(2000)
+const color = ref("information")
 
 const vuetifyTheme = useTheme()
 const authStore = useAuthStore()
@@ -33,25 +37,26 @@ const authThemeMask = computed(() => {
 })
 
 const emailRules = [
-  (v: string) => !!v || 'Email é obrigatório',
-  (v: string) => /.+@.+\..+/.test(v) || 'Email inválido',
+  (v: string) => !!v || 'Email is required',
+  (v: string) => /.+@.+\..+/.test(v) || 'Invalid Email',
 ]
 
 const passwordRules = [
-  (v: string) => !!v || 'Senha é obrigatória',
+  (v: string) => !!v || 'Password is required',
   (v: string) => v.length >= 6 || 'Senha deve ter pelo menos 6 caracteres',
 ]
 
 const onSubmit = async () => {
 
   // await axiosInstance.get('/sanctum/csrf-cookie')
-
+  isLoading.value = true
   showError.value = false
   errorMessage.value = ''
 
   const { valid } = await formRef.value!.validate()
   if (!valid) {
-    errorMessage.value = 'Corrija os erros do formulário'
+    errorMessage.value = 'Verify form errors'
+    isLoading.value = false    
     showError.value = true
     return
   }
@@ -64,30 +69,34 @@ const onSubmit = async () => {
     
     router.push({ name: 'dashboard' })
   } catch (error: any) {
-    errorMessage.value = error.response?.data?.message || 'Erro ao efetuar login'
+    errorMessage.value = error.response?.data?.message || 'Login error'
     showError.value = true
+  }finally{
+    isLoading.value = false
   }
+  
 }
 
-onMounted(() => {
-  // authStore.loadToken()
-})
+
 </script>
 
 <template>
-  <VAlert
-    v-if="showError"
-    density="compact"
-    class="mx-2 mt-2 position-absolute"
-    block
-    max-width="400"
-    title="Campos inválidos"
-    color="warning"
-    type="warning"
-    border="start"
-    :text="errorMessage"
-    closable
-  />
+
+
+  <VSnackbar v-model="showError" location="top" :color="color" variant="elevated" :timeout="timeout">
+        {{ errorMessage }}
+        <template v-slot:actions>
+            <v-btn color="blue" variant="text" @click="showError = false">
+                Close
+            </v-btn>
+        </template>
+    </VSnackbar>
+
+  <div v-if="isLoading" class="loading-overlay">
+        <VProgressCircular indeterminate
+        color="blue"
+        class="ma-4"/>
+    </div>
 
   <div class="auth-wrapper d-flex align-center justify-center pa-4">
     <VCard class="auth-card pa-4 pt-7" max-width="448">
@@ -97,9 +106,9 @@ onMounted(() => {
         </RouterLink>
       </VCardItem>
 
-      <VCardText class="pt-2">
-        <h4 class="text-h4 mb-1">Welcome to TravelReqApp! 👋🏻</h4>
-        <p class="mb-0">Please sign-in to your account and schedule your travel...</p>
+      <VCardText class="pt-2 text-center">
+        <h4 class="text-h4 mb-1">Login on Travel App👋🏻</h4>
+        <p class="mb-0">Sign-in and schedule your travel</p>
       </VCardText>
 
       <VCardText>
@@ -128,7 +137,7 @@ onMounted(() => {
               />
 
               <div class="d-flex align-center justify-space-between flex-wrap my-6">
-                <VCheckbox v-model="form.remember" label="Remember me" />
+                <!-- <VCheckbox v-model="form.remember" label="Remember me" /> -->
                 <a class="text-primary" href="#">Forgot Password?</a>
               </div>
 
@@ -150,6 +159,21 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use "@core/scss/template/pages/page-auth";
+
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color: rgba(255, 255, 255, 0.6); /* semi-transparente */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 </style>

@@ -8,7 +8,7 @@ interface User {
   is_admin: boolean
 }
 
-interface UserRegister{
+interface UserRegister {
   name: string,
   email: string,
   password: string,
@@ -16,11 +16,17 @@ interface UserRegister{
 }
 
 export const useAuthStore = defineStore('auth', {
-   state: () => ({
-     user: null as User | null,
-     token: null as string | null,
-   }),
-  
+  state: () => ({
+    user: null as User | null,
+    token: null as string | null,
+  }),
+
+  getters: {
+    isAuthenticated: (state) => {
+      console.log(state)
+      return !!state.token}
+  },
+
   actions: {
     async login(payload: { email: string; password: string }) {
       try {
@@ -36,7 +42,7 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async register(payload: UserRegister){
+    async register(payload: UserRegister) {
       try {
         const response = await axiosInstance.post('/register', payload)
         const token = response.data.access_token
@@ -51,16 +57,16 @@ export const useAuthStore = defineStore('auth', {
     },
 
     // Buscar usuário autenticado
-     async fetchUser() {
-       try {
-         const response = await axiosInstance.get('/user')
-         console.log(response)
-         this.user = response.data
-       } catch (error) {
-         console.error('Erro ao buscar usuário:', error)
-         this.logout()
-       }
-     },
+    async fetchUser() {
+      try {
+        const response = await axiosInstance.get('/user')
+        console.log('Resposta user> ', response)
+        this.user = response.data
+      } catch (error) {
+        console.error('Erro ao buscar usuário:', error)
+        this.logout()
+      }
+    },
 
     // Salva o token
     setToken(token: string) {

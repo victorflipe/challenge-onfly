@@ -16,6 +16,7 @@ const totalPages = ref(0)
 
 onMounted(async () => {
   try {
+    isLoading.value = true
     await fetchData(currentPage.value)
   } catch (error: any) {
     errorMessage.value = error.response?.data?.message || 'Erro ao buscar requisição'
@@ -31,7 +32,7 @@ const filteredRequests = computed(() => {
 })
 
 const fetchData = async (page: number) => {
-  isLoading.value = true
+  // isLoading.value = true
   const response = await getRequests(page)  // Passa a página como parâmetro
   requests.value = response.data.data  // Dados da página
   totalPages.value = response.data.last_page  // Total de páginas
@@ -59,13 +60,13 @@ const goToPage = (page: number) => {
 
     <VCol cols="12" class="">
       <VRow>
-        <VCol cols="6">
+        <VCol cols="10">
           <VBtn color="primary" to="new-travel-request">
             <!-- <VIcon icon="ri-upload-cloud-line" class="" /> -->
             <span class="">New Travel Request</span>
           </VBtn>
         </VCol>
-        <VCol cols="6" class="d-flex justify-end">
+        <VCol cols="2" class="d-flex justify-end">
           <VSelect label="Filter by Status" v-model="selectedStatus" :items="statusOptions" variant="outlined"
             style="width:150px" />
         </VCol>
@@ -75,7 +76,7 @@ const goToPage = (page: number) => {
 
   <VRow class="match-height">
     <VCol cols="12">
-      <ListTravelRequests :items="filteredRequests" @updateData="fetchData"/>
+      <ListTravelRequests :items="filteredRequests" @updateData="fetchData" :is-loading-data="isLoading"/>
     </VCol>
   </VRow>
 

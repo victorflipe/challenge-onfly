@@ -20,13 +20,13 @@ const headers = [
   { title: 'See Details', key: 'details' }
 ]
 
-const props = defineProps<{ items: any[] }>()
+const props = defineProps<{ items: any[], isLoadingData: boolean }>()
 
 const selectedItem = ref<any | null>(null)
 const dialog = ref(false)
-const dialogCancel = ref(false)
-const dialogApprove = ref(false)
-const isLoading = ref(true)
+// const dialogCancel = ref(false)
+// const dialogApprove = ref(false)
+// const isLoading = ref(false)
 const errorMessage = ref('')
 const showError = ref(false)
 const color = ref('')
@@ -57,38 +57,36 @@ function handleChildError(message: string) {
 }
 
 
-const onUpdateStatus = async (status: string) => {
-  console.log('Vai cancelar', selectedItem.value.id)
-  console.log(status === "canceled")
-  try {
-    if (!selectedItem.value) return
-    await updateStatus(selectedItem.value.id, status)
+// const onUpdateStatus = async (status: string) => {
+  
+//   try {
+//     if (!selectedItem.value) return
+//     await updateStatus(selectedItem.value.id, status)
 
-    status === "canceled" ? dialogCancel.value = false : dialogApprove.value = false
+//     status === "canceled" ? dialogCancel.value = false : dialogApprove.value = false
 
-  } catch (error: any) {
-    console.log('erro: ', error.response?.data?.message)
-    errorMessage.value = error.response?.data?.message
-    showError.value = true
-  }
-}
+//   } catch (error: any) {
+//     errorMessage.value = error.response?.data?.message
+//     showError.value = true
+//   }
+// }
 
-const resolveUserRoleVariant = (role: string) => {
-  const roleLowerCase = role.toLowerCase()
+// const resolveUserRoleVariant = (role: string) => {
+//   const roleLowerCase = role.toLowerCase()
 
-  if (roleLowerCase === 'subscriber')
-    return { color: 'success', icon: 'ri-user-line' }
-  if (roleLowerCase === 'author')
-    return { color: 'error', icon: 'ri-computer-line' }
-  if (roleLowerCase === 'maintainer')
-    return { color: 'info', icon: 'ri-pie-chart-line' }
-  if (roleLowerCase === 'editor')
-    return { color: 'warning', icon: 'ri-edit-box-line' }
-  if (roleLowerCase === 'admin')
-    return { color: 'primary', icon: 'ri-vip-crown-line' }
+//   if (roleLowerCase === 'subscriber')
+//     return { color: 'success', icon: 'ri-user-line' }
+//   if (roleLowerCase === 'author')
+//     return { color: 'error', icon: 'ri-computer-line' }
+//   if (roleLowerCase === 'maintainer')
+//     return { color: 'info', icon: 'ri-pie-chart-line' }
+//   if (roleLowerCase === 'editor')
+//     return { color: 'warning', icon: 'ri-edit-box-line' }
+//   if (roleLowerCase === 'admin')
+//     return { color: 'primary', icon: 'ri-vip-crown-line' }
 
-  return { color: 'success', icon: 'ri-user-line' }
-}
+//   return { color: 'success', icon: 'ri-user-line' }
+// }
 
 const resolveUserStatusVariant = (stat: string) => {
   const statLowerCase = stat.toLowerCase()
@@ -110,7 +108,7 @@ const openDialog = (item: any) => {
 </script>
 
 <template>
-
+  
   <VSnackbar v-model="showError" location="top" :color="color" variant="elevated" :timeout="timeout">
     {{ errorMessage }}
 
@@ -124,7 +122,7 @@ const openDialog = (item: any) => {
   <VDialog v-model="dialog" persistent max-width="50%">
     <VCard>
       <VCardTitle class="d-flex align-center">
-        <span> Travel Request Details</span>
+        <span> Travel Request Details </span>
         <VBtn text="Close" variant="text" class="ms-auto" @click="dialog = false" />
       </VCardTitle>
 
@@ -134,7 +132,8 @@ const openDialog = (item: any) => {
   </VDialog>
 
   <VCard>
-    <VDataTable :headers="headers" :items="props.items" item-value="id" :sticky="true" class="text-no-wrap">
+    
+    <VDataTable :headers="headers" :items="props.items" item-value="id" :sticky="true" :loading="props.isLoadingData" class="text-no-wrap">
 
       <template #item.departure_date="{ item }">
         {{ formatDate(item.departure_date) }}
@@ -162,3 +161,18 @@ const openDialog = (item: any) => {
     </VDataTable>
   </VCard>
 </template>
+
+<style scoped>
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color: rgba(255, 255, 255, 0.6); /* semi-transparente */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
