@@ -39,7 +39,5 @@ class TravelRequest extends Model
         ->when($request->filled('return_date'), fn($q) => $q->whereDate('return_date', '<=', $request->return_date))
         ->when($request->filled('destination'), fn($q) => $q->where('destination', 'like', '%' . $request->destination . '%'));
     
-        // dd($all);
-        // return $query;
     }
 }

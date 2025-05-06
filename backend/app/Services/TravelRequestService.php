@@ -27,9 +27,9 @@ class TravelRequestService
         return $this->repository->find($id);
     }
 
-    public function update(TravelRequest $request, array $data)
+    public function update(array $data, int $id)
     {
-        return $this->repository->update($request->id, $data);
+        return $this->repository->update($id, $data);
     }
 
     public function delete(TravelRequest $request)

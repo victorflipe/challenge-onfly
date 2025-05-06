@@ -30,10 +30,10 @@ class TravelRequestRepository implements TravelRequestRepositoryInterface
         return TravelRequest::create($data);
     }
 
-    public function update(int $id, array $data)
+    public function update(int $id, array $data): bool
     {
-        return TravelRequest::update($data);
-        // return $travelRequest;
+        $travelRequest = TravelRequest::findOrFail($id);
+        return $travelRequest->update($data);
     }
 
     public function delete(int $id)

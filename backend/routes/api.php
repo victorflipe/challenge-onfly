@@ -13,6 +13,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/travel-requests', [TravelRequestController::class, 'index']);
     Route::post('/travel-requests', [TravelRequestController::class, 'create']);
     Route::get('/travel-requests/{id}', [TravelRequestController::class, 'show']);
+    Route::get('/check-update-status/{id}', [TravelRequestController::class, 'checkUpdateStatus']);
     Route::put('/travel-requests/{id}', [TravelRequestController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'getUser']);

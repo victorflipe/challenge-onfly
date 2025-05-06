@@ -36,10 +36,21 @@ class TravelRequestStatusUpdated extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-        ->subject('Status of Requested Travel updateed successfully')
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+        ->subject('Status of Requested Travel updated successfully')
+            ->line('Requested Travel updated successfully')
+            ->line('----------------------------------------------------')
+            ->line(' ')
+            ->line(' ')
+            ->line('    Travel Request: '. $this->travelRequest->id)
+            ->line('    Destination: '. $this->travelRequest->destination)
+            ->line('    Departure Date: '. $this->travelRequest->departure_date->format('m/d/Y'))
+            ->line('    Return Date: '. $this->travelRequest->return_date->format('m/d/Y'))
+            ->line('    Status: '. $this->travelRequest->status->name)
+            ->line('')
+            ->line('----------------------------------------------------')
+            // ->action('Notification Action', url('/'))
+            ->line(' ')
+            ->line(' ');
     }
 
     /**
