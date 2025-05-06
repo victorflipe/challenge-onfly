@@ -30,7 +30,7 @@ class TravelRequestStatusTest extends TestCase
         $response = $this->patchJson("/api/travel-requests/{$travelRequest->id}/status", ['status' => 'approved']);
 
         $response->assertStatus(403)->assertJson([
-            'message' => "Você não pode alterar o status do próprio pedido"
+            'message' => "You cannot change the status of the order itself."
         ]);
 
     }
@@ -39,7 +39,7 @@ class TravelRequestStatusTest extends TestCase
     public function test_another_user_can_update_travel_request_status()
     {
         $userOwner = User::factory()->create();
-        $userManager = User::factory()->create();
+        $userManager = User::factory()->create(['is_admin' => true]);
 
         $payload = [
             'user_id' => $userOwner->id,
@@ -59,7 +59,7 @@ class TravelRequestStatusTest extends TestCase
 
         $response->assertStatus(200)
         ->assertJson([
-            'message' => "Status atualizado com sucesso!",
+            'message' => "Status updated successfully!",
             'data' => [
                 'id' => $travelRequest->id,
                 'status' => 'approved'
