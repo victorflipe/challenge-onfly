@@ -22,8 +22,8 @@ logs:
 install-backend:
 	docker exec -it $(BACKEND_CONTAINER) composer install
 
-install-frontend:
-	docker exec -it $(FRONTEND_CONTAINER) npm install
+# install-frontend:
+# 	docker exec -it $(FRONTEND_CONTAINER)
 
 # Laravel Artisan
 key:
@@ -58,11 +58,15 @@ make-seeder:
 
 # Executa testes do Laravel
 test:
-	docker exec -it $(BACKEND_CONTAINER) php artisan test
+	docker exec -it $(BACKEND_CONTAINER) sh -c '\
+		[ -f .env.testing ] || cp .env.testing.example .env.testing; \
+		if ! grep -q "^APP_KEY=" .env.testing; then \
+			php artisan key:generate --env=testing; \
+		fi; \
+		php artisan config:clear; \
+		php artisan config:cache; \
+		php artisan test --env=testing'
 
-# Comando para verificar se .env existe e copiar do .env.example
-check-env:
-	@if [ ! -f .env ]; then cp .env.example .env; echo ".env não encontrado, copiado de .env.example"; fi
 
 # Comando completo para inicializar tudo
-init: up install-backend key migrate seed install-frontend check-env
+init: up install-backend key migrate seed
