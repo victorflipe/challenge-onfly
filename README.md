@@ -52,7 +52,7 @@ Certifique-se de ter as seguintes ferramentas instaladas:
 
     * 🌐 Contêiner do Vue.js (frontend)
 
-    * ✉️ Mailpit (simulação de envio de e-mails)
+    * ✉️ Contêiner do Mailpit (simulação de envio de e-mails)
 
     * 🧱 Migrações para o banco de dados
 
@@ -63,7 +63,7 @@ Certifique-se de ter as seguintes ferramentas instaladas:
 
 ## 🌐 Acessando o Projeto
 
-Após instalar os conteiners necessários, é hora de checar a aplicação:
+Após instalar os contêineres necessários, é hora de checar a aplicação:
 
 Acesse o endereço: 
  ```
