@@ -108,7 +108,7 @@ const onSubmit = async () => {
 
       <VCardText class="pt-2 text-center">
         <h4 class="text-h4 mb-1">Login on Travel App👋🏻</h4>
-        <p class="mb-0">Sign-in and schedule your travel</p>
+        <p class="mb-6">Sign-in and schedule your travel</p>
       </VCardText>
 
       <VCardText>
@@ -134,12 +134,13 @@ const onSubmit = async () => {
                 :append-inner-icon="isPasswordVisible ? 'ri-eye-off-line' : 'ri-eye-line'"
                 @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 :rules="passwordRules"
+                class="mb-12"
               />
 
-              <div class="d-flex align-center justify-space-between flex-wrap my-6">
-                <!-- <VCheckbox v-model="form.remember" label="Remember me" /> -->
+              <!-- <div class="d-flex align-center justify-space-between flex-wrap my-6">
+                <VCheckbox v-model="form.remember" label="Remember me" />
                 <a class="text-primary" href="#">Forgot Password?</a>
-              </div>
+              </div> -->
 
               <VBtn block type="submit">Login</VBtn>
             </VCol>
