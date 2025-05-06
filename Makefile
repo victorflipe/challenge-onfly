@@ -65,4 +65,4 @@ check-env:
 	@if [ ! -f .env ]; then cp .env.example .env; echo ".env não encontrado, copiado de .env.example"; fi
 
 # Comando completo para inicializar tudo
-init: up install-backend key migrate install-frontend
+init: up install-backend key migrate seed install-frontend check-env

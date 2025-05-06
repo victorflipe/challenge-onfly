@@ -57,5 +57,12 @@ services:
     #   - ./frontend:/app
     #   - /app/node_modules
 
+  
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
 volumes:
   db-data:
