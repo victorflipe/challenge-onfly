@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\TravelRequest;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TravelRequestFactory extends Factory
@@ -11,8 +12,11 @@ class TravelRequestFactory extends Factory
 
     public function definition(): array
     {
+        $user = User::inRandomOrder()->first();
+        
         return [
-            'requester_name' => $this->faker->name,
+            'user_id' => $user->id,
+            'requester_name' => $user->name,
             'destination' => $this->faker->city,
             'departure_date' => $this->faker->dateTimeBetween('+1 days', '+1 month')->format('Y-m-d'),
             'return_date' => $this->faker->dateTimeBetween('+2 days', '+2 months')->format('Y-m-d'),
