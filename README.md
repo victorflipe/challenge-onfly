@@ -22,7 +22,7 @@ Certifique-se de ter as seguintes ferramentas instaladas:
 
 - [Git](https://git-scm.com/downloads)
 - [Docker](https://docs.docker.com/engine/install/)
-- [Make](https://www.gnu.org/software/make/) (para executar comandos via `Makefile`)
+- **Make** para executar comandos via `Makefile`
 
 
 ---
