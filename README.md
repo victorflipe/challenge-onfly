@@ -36,7 +36,13 @@ Certifique-se de ter as seguintes ferramentas instaladas:
     git clone https://github.com/seu-usuario/challenge-onfly.git
     cd challenge-onfly
     ```
-2. Na pasta raíz do projeto, execute o comando de inicialização::
+
+2. Antes de rodar o próximo comando, garanta que os arquivos abaixo não existam, pois serão criados automaticamente.
+    ```
+    .env e .env.testing 
+    ```
+
+3. Na pasta raíz do projeto, execute o comando de inicialização::
 
     ```
     make init
