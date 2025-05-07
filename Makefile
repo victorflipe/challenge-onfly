@@ -22,8 +22,8 @@ logs:
 install-backend:
 	docker exec -it $(BACKEND_CONTAINER) composer install
 
-# install-frontend:
-# 	docker exec -it $(FRONTEND_CONTAINER)
+create-env:
+	docker exec -it $(BACKEND_CONTAINER) sh -c 'if [ ! -f .env ]; then cp .env.example .env; fi'
 
 # Laravel Artisan
 key:
@@ -65,8 +65,8 @@ test:
 		fi; \
 		php artisan config:clear; \
 		php artisan config:cache; \
-		php artisan test --env=testing'
+		php artisan test --testsuite=Feature --env=testing'
 
 
 # Comando completo para inicializar tudo
-init: up install-backend key migrate seed
+init: up install-backend create-env key fresh seed
