@@ -25,7 +25,7 @@ class TravelRequestShowTest extends TestCase
 
         $response->assertStatus(200)
         ->assertJsonFragment([
-            'user_id' => $travelRequest->id,
+            'user_id' => $travelRequest->user_id,
             'requester_name' => $travelRequest->requester_name,
             'destination' => $travelRequest->destination
         ]);

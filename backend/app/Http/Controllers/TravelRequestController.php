@@ -88,7 +88,7 @@ class TravelRequestController extends Controller
 
         $travelRequest = TravelRequest::findOrFail($id);
 
-        if ($travelRequest->user_id === Auth::user()->id || !Auth::user()->is_admin) {
+        if ($travelRequest->user_id === Auth::user()->id && !Auth::user()->is_admin) {
             return response()->json([
                 'message' => 'You cannot change the status of the order itself.'
             ], 403);
